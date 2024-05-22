@@ -1,7 +1,7 @@
 const http = require('http');
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs'); // module hệ thống tập tin (file system) của Node.js, cho phép làm việc với hệ thống tập tin
+const path = require('path'); // module cung cấp các tiện ich để làm việc với đường dẫn tệp tin và thư mục
 
 const hostname = 'localhost';
 const port = 3000;
@@ -30,8 +30,13 @@ const server = http.createServer((req, res) => {
             fileUrl = req.url;
         }
 
-        var filePath = path.resolve('./public' + fileUrl);
-        const fileExt = path.extname(filePath);
+        var filePath = path.resolve('./public' + fileUrl); // path.resolve: chuyển đổi đường dẫn tương đối thành đường dẫn tuyệt đối
+        const fileExt = path.extname(filePath); 
+        /* 
+        path.extname: trả về phần mở rộng của tệp bao gồm dấu chấm (`.`)
+        Ví dụ: filePath = "D:\FPT UNIVERSITY\CN7\SDN301m\ExercisesPractice\NodeJS\node-http\public\index.html"
+            thì fileExt = ".html"
+        */
         if (fileExt == '.html') {
             fs.exists(filePath, (exists) => {
                 if (!exists) {
@@ -49,6 +54,10 @@ const server = http.createServer((req, res) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/html');
                 fs.createReadStream(filePath).pipe(res);
+                /*
+                fs.createReadStream(filePath): tạo ra một Readable Stream từ tệp nằm tại filePath
+                .pipe(res): chuyển dữ liệu từ Readable Stream sang Writable Stream (đầu vào của response để gửi đến client)
+                */
             });
         } else {
             res.statusCode = 404;
