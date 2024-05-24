@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const dishRouter = require('./routes/dishRouter');
 
 const hostname = 'localhost';
 const port = 3000;
@@ -24,10 +25,12 @@ app.use(morgan('dev')); // sử dụng middleware 'morgan' với cấu hình 'de
 //     `);
 // });
 
-app.use(express.static(__dirname + '/public'));
+// app.use(express.static(__dirname + '/public'));
 /*
 sử dụng middleware 'express.static' để phục vụ các tệp tĩnh từ thư mục public trong thư mục hiện tại '__dirname"
 */
+
+app.use('/dishes', dishRouter);
 
 app.use(bodyParser.json());
 
