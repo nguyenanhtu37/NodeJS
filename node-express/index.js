@@ -10,6 +10,7 @@ app.use((req, res, next) => {
     console.log(req.headers);
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html');
+    // res.write("Hello world");
     res.end(`
         <html>
             <body>
