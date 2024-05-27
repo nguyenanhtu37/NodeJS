@@ -3,6 +3,8 @@ const http = require('http');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const dishRouter = require('./routes/dishRouter');
+const promoRouter = require('./routes/promoRouter');
+const leaderRouter = require('./routes/leaderRouter');
 
 const hostname = 'localhost';
 const port = 3000;
@@ -29,51 +31,60 @@ app.use(morgan('dev')); // sử dụng middleware 'morgan' với cấu hình 'de
 /*
 sử dụng middleware 'express.static' để phục vụ các tệp tĩnh từ thư mục public trong thư mục hiện tại '__dirname"
 */
+const routes = [
+    {path: '/dishes', route: dishRouter},
+    {path: '/promotions', route: promoRouter},
+    {path: '/leaders', route: leaderRouter},
+];
 
-app.use('/dishes', dishRouter);
-
-app.use(bodyParser.json());
-
-app.all('/dishes', (req, res, next) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    next();
+routes.forEach(routes => {
+    app.use(routes.path, routes.route);
 });
 
-app.get('/dishes', (req, res, next) => {
-    res.end('Will send all the dishes to you!');
-});
+// app.use('/dishes', dishRouter);
 
-app.post('/dishes', (req, res, next) => {
-    res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
-});
+// app.use(bodyParser.json());
 
-app.put('/dishes', (req, res, next) => {
-    res.statusCode = 200;
-    res.end('PUT operation is not supported on /dishes');
-});
+// app.all('/dishes', (req, res, next) => {
+//     res.statusCode = 200;
+//     res.setHeader('Content-Type', 'text/plain');
+//     next();
+// });
 
-app.delete('/dishes', (req, res, next) => {
-    res.end('Deleting all dishes');
-});
+// app.get('/dishes', (req, res, next) => {
+//     res.end('Will send all the dishes to you!');
+// });
 
-app.get('/dishes/:dishId', (req, res, next) => {
-    res.end('Will send details of the dish: ' + req.params.dishId + ' to you!');
-});
+// app.post('/dishes', (req, res, next) => {
+//     res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
+// });
 
-app.post('dishes/:dishId', (req, res, next) => {
-    res.statusCode = 200;
-    res.end('POST operation is not supported on /dishes/' + req.params.dishId);
-});
+// app.put('/dishes', (req, res, next) => {
+//     res.statusCode = 200;
+//     res.end('PUT operation is not supported on /dishes');
+// });
 
-app.put('/dishes/:dishId', (req, res, next) => {
-    res.write('Updating the dish: ' + req.params.dishId + '\n');
-    res.end('Will update the dish: ' + req.body.name + ' with details: ' + req.body.description);
-});
+// app.delete('/dishes', (req, res, next) => {
+//     res.end('Deleting all dishes');
+// });
 
-app.delete('/dishes/:dishId', (req, res, next) => {
-    res.end('Deleting dish: ' + req.params.dishId);
-});
+// app.get('/dishes/:dishId', (req, res, next) => {
+//     res.end('Will send details of the dish: ' + req.params.dishId + ' to you!');
+// });
+
+// app.post('dishes/:dishId', (req, res, next) => {
+//     res.statusCode = 200;
+//     res.end('POST operation is not supported on /dishes/' + req.params.dishId);
+// });
+
+// app.put('/dishes/:dishId', (req, res, next) => {
+//     res.write('Updating the dish: ' + req.params.dishId + '\n');
+//     res.end('Will update the dish: ' + req.body.name + ' with details: ' + req.body.description);
+// });
+
+// app.delete('/dishes/:dishId', (req, res, next) => {
+//     res.end('Deleting dish: ' + req.params.dishId);
+// });
 
 const server = http.createServer(app);
 
