@@ -7,45 +7,41 @@ const connect = mongoose.connect(url);
 connect.then((db) => {
     console.log('Connected correctly to server');
 
-    // Chèn và xử lý tài liệu 'Orange'
     Dishes.create({
-        name: 'Orange',
+        name: 'Apple',
         description: 'test'
     })
-    .then((dish) => {
-        console.log(dish);
+        .then((dish) => {
+            console.log(dish);
 
-        return Dishes.find({}).exec();
-    })
-    .then((dishes) => {
-        console.log(dishes);
+            return Dishes.findByIdAndUpdate(dish._id, {
+                $set: { description: 'Updated test' }
+            }, {
+                new: true
+            })
+                .exec();
+        })
+        .then((dish) => {
+            console.log(dish);
 
-        return Dishes.deleteMany({});
-    })
-    .then(() => {
-        console.log("Collection cleared");
+            dish.comments.push({
+                rating: 5,
+                comment: 'I\'m getting a sinking feeling!',
+                author: 'Leonardo di Carpaccio'
+            });
 
-        // Chèn và xử lý tài liệu 'Uthapizza'
-        return Dishes.create({
-            name: 'Uthapizza',
-            description: 'Test'
+            return dish.save();
+        })
+        .then((dish) => {
+            console.log(dish);
+
+            return Dishes.deleteMany({});
+        })
+        .then(() => {
+            return mongoose.connection.close();
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    })
-    .then((dish) => {
-        console.log(dish);
 
-        return Dishes.find({}).exec();
-    })
-    .then((dishes) => {
-        console.log(dishes);
-
-        return Dishes.deleteMany({});
-    })
-    .then(() => {
-        console.log("Collection cleared");
-        return mongoose.connection.close();
-    })
-    .catch((err) => {
-        console.log(err);
-    });
 });
